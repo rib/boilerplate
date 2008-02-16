@@ -2,29 +2,11 @@
 
 PREFIX=/home/rob/src/boilerplate
 
-usage()
-{
-    echo "boilerplate <command>"
-    echo ""
-    echo "Where command is one of:"
-    for i in `find $PREFIX/modules -iname 'mod-*' -type d`
-    do
-        if test -f $i/run.sh; then
-            setterm -bold
-            echo -n $(basename $i)
-            setterm -default
-            pushd $i &>/dev/null
-            ./run.sh synopsis
-            ./run.sh summary
-            popd &>/dev/null
-        fi
-    done
-}
 
 run_mod()
 {
     if test -f $PREFIX/modules/$1/run.sh; then
-        MODULE=$1
+        local MODULE=$1
         shift
         export MODULE_DIR=$PREFIX/modules/$MODULE
         $PREFIX/modules/$MODULE/run.sh run "$@"
@@ -33,6 +15,29 @@ run_mod()
         exit 1
     fi
 }
+
+usage()
+{
+    echo "boilerplate <command>"
+    echo ""
+    echo "Where command is one of:"
+    for i in `find $PREFIX/modules -iname 'mod-*' -type d`
+    do
+        if test -f $i/run.sh; then
+            local MODULE=$(basename $i)
+            setterm -bold
+            echo -n $MODULE
+            setterm -default
+            $PREFIX/modules/$MODULE/run.sh synopsis
+            $PREFIX/modules/$MODULE/run.sh summary
+#            pushd $i &>/dev/null
+#            ./run.sh synopsis
+#            ./run.sh summary
+#            popd &>/dev/null
+        fi
+    done
+}
+
 
 if test $# -eq 0; then
     usage

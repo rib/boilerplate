@@ -1,0 +1,7 @@
+To create a new module:
+
+cp -av template ./mod-X-Y-Z
+
+(Note: the name must start with "mod-")
+
+Edit ./mod-X-Y-Z/run.sh
