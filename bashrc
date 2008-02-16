@@ -5,9 +5,14 @@
 
 export BOILERPLATE_PREFIX=/home/rob/src/boilerplate
 
+
 boilerplate()
 {
     $BOILERPLATE_PREFIX/boilerplate.sh "$@"
     . $BOILERPLATE_PREFIX/profile
 }
 
+bp()
+{
+    boilerplate "$@"
+}

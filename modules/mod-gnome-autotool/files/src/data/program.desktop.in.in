@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+_Name=@FULL_PROGRAM_NAME@
+_GenericName=@GENERIC_PROGRAM_NAME@
+_Comment=
+Exec=@PROGRAM_NAME@ %f
+Terminal=false
+Type=Application
+Icon=@PROGRAM_NAME@
+X-GNOME-DocPath=@PROGRAM_NAME@/@PROGRAM_NAME@.xml
+Categories=GNOME;GTK;Application;Development;
+MimeType=application/x-executable
+StartupNotify=true

@@ -1,4 +1,9 @@
 
+if test $# -lt 1; then
+    echo "Dont run directly"
+    exit 1
+fi
+
 
 case $1 in
     synopsis)

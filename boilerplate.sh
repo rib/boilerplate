@@ -26,9 +26,8 @@ run_mod()
     if test -f $PREFIX/modules/$1/run.sh; then
         MODULE=$1
         shift
-        pushd $PREFIX/modules/$MODULE &>/dev/null
+        export MODULE_DIR=$PREFIX/modules/$MODULE
         $PREFIX/modules/$MODULE/run.sh run "$@"
-        popd &>/dev/null
     else
         echo "No such module $1 found"
         exit 1
