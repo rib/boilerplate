@@ -45,7 +45,7 @@ run()
     PKG_NAME_UC=$(echo $PKG_NAME|tr a-z A-Z)
     read_var "Choose an initial version number" INITIAL_VERSION "0.1.0"
     read_var "Choose the name of your program (one word)" PROGRAM_NAME $PKG_NAME
-    PROGRAM_NAME_UC=$(echo $PROGRAM_NAME_UC|tr a-z A-Z)
+    PROGRAM_NAME_UC=$(echo $PROGRAM_NAME|tr a-z A-Z)
     read_var "Write the _full_ name of your program (e.g GSwat Debugger)" FULL_PROGRAM_NAME ""
     read_var "Write the generic name of your program (e.g. Program Debugger)" GENERIC_PROGRAM_NAME ""
     
@@ -53,7 +53,7 @@ run()
     echo "Package name = $PKG_NAME/$PKG_NAME_UC"
     echo "Initial version = $INITIAL_VERSION"
     echo "Program name = $PROGRAM_NAME/$PROGRAM_NAME_UC"
-    echo "First src file = $PROJECT_DIR/src/$FIRST_SRC_FILE"
+    echo "First src file = $PROJECT_DIR/src/${PROGRAM_NAME}.c"
     echo "Press Ctrl-C to cancel"
     read CTRL_C
 
