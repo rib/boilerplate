@@ -1,0 +1,10 @@
+To use the boilerplate code scripts you need to run
+
+ $ make install
+
+This wont install anything outside of the unpacked
+boilerplate project directory, it just processes
+any *.in files to fix the location of these files.
+
+Additionally you can modify your .bashrc script
+to source the boilerplate/bashrc script.

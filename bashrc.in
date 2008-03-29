@@ -3,7 +3,7 @@
 # This file should be sourced into your shell e.g. within
 # your ~/.bashrc
 
-export BOILERPLATE_PREFIX=/home/rob/src/boilerplate
+export BOILERPLATE_PREFIX=@BP_INST_PREFIX@
 
 
 boilerplate()

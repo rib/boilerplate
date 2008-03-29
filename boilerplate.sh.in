@@ -1,6 +1,6 @@
 #!/bin/sh
 
-PREFIX=/home/rob/src/boilerplate
+PREFIX=@BP_INST_PREFIX@
 
 
 run_mod()
