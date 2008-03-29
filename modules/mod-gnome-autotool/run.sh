@@ -41,6 +41,11 @@ run()
     
 
     # First read in all the configuration variables we need...
+    read_var "What type of project is this? (application|library)" PKG_TYPE "application"
+    if test "$PKG_TYPE" != "library" -a "$PKG_TYPE" != "application"; then
+        echo "The project type must be one of: \"application\" or \"library\""
+        exit 1
+    fi
     read_var "Choose a name for your package (lowercase)" PKG_NAME ""
     PKG_NAME_UC=$(echo $PKG_NAME|tr a-z A-Z)
     read_var "Choose an initial version number" INITIAL_VERSION "0.1.0"
@@ -48,8 +53,10 @@ run()
     PROGRAM_NAME_UC=$(echo $PROGRAM_NAME|tr a-z A-Z)
     read_var "Write the _full_ name of your program (e.g GSwat Debugger)" FULL_PROGRAM_NAME ""
     read_var "Write the generic name of your program (e.g. Program Debugger)" GENERIC_PROGRAM_NAME ""
+
     
     echo "Summary of config:"
+    echo "Package type = $PKG_TYPE"
     echo "Package name = $PKG_NAME/$PKG_NAME_UC"
     echo "Initial version = $INITIAL_VERSION"
     echo "Program name = $PROGRAM_NAME/$PROGRAM_NAME_UC"
@@ -78,8 +85,8 @@ run()
         chmod +x $PROJECT_DIR/autogen.sh
         echo "Wrote $PROJECT_DIR/autogen.sh"
     fi
-    if ! test -f $PROJECT_DIR/configure.in.in; then
-        cat $MODULE_DIR/files/configure.in.in \
+    if ! test -f $PROJECT_DIR/configure.in; then
+        cat $MODULE_DIR/files/$PKG_TYPE.configure.in.in \
             | sed "s/@PKG_NAME@/$PKG_NAME/g" \
             | sed "s/@PKG_NAME_UC@/$PKG_NAME_UC/g" \
             | sed "s/@INITIAL_VERSION@/$INITIAL_VERSION/g" \
@@ -88,7 +95,7 @@ run()
         echo "Wrote $PROJECT_DIR/configure.in"
     fi
     if ! test -f $PROJECT_DIR/Makefile.am; then
-        cp $MODULE_DIR/files/Makefile.am $PROJECT_DIR
+        cp $MODULE_DIR/files/$PKG_TYPE.Makefile.am $PROJECT_DIR
         echo "Wrote $PROJECT_DIR/Makefile.am"
     fi
     if ! test -f $PROJECT_DIR/src/Makefile.am; then
