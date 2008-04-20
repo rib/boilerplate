@@ -16,7 +16,7 @@ run_mod()
     fi
 }
 
-usage()
+_bp_usage()
 {
     echo "boilerplate <command>"
     echo ""
@@ -40,7 +40,7 @@ usage()
 
 
 if test $# -eq 0; then
-    usage
+    _bp_usage
     exit 0
 fi
 
@@ -48,7 +48,7 @@ while test $# -gt 0
 do
     case $1 in
         -h|--help)
-            usage
+            _bp_usage
             exit 0
             ;;
         *)
