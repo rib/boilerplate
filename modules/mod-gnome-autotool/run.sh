@@ -49,17 +49,18 @@ run()
     read_var "Choose a name for your package (lowercase)" PKG_NAME ""
     PKG_NAME_UC=$(echo $PKG_NAME|tr a-z A-Z)
     read_var "Choose an initial version number" INITIAL_VERSION "0.1.0"
-    read_var "Choose the name of your program (one word)" PROGRAM_NAME $PKG_NAME
+    read_var "Choose the name of your application/library (one word CamelCase)" PROGRAM_NAME $PKG_NAME
     PROGRAM_NAME_UC=$(echo $PROGRAM_NAME|tr a-z A-Z)
-    read_var "Write the _full_ name of your program (e.g GSwat Debugger)" FULL_PROGRAM_NAME ""
-    read_var "Write the generic name of your program (e.g. Program Debugger)" GENERIC_PROGRAM_NAME ""
+    PROGRAM_NAME_LC=$(echo $PROGRAM_NAME|tr A-Z a-z)
+    read_var "Write the _full_ name of your application/library (e.g GSwat Debugger)" FULL_PROGRAM_NAME ""
+    read_var "Write the generic name of your application/library (e.g. Program Debugger)" GENERIC_PROGRAM_NAME ""
 
     
     echo "Summary of config:"
     echo "Package type = $PKG_TYPE"
     echo "Package name = $PKG_NAME/$PKG_NAME_UC"
     echo "Initial version = $INITIAL_VERSION"
-    echo "Program name = $PROGRAM_NAME/$PROGRAM_NAME_UC"
+    echo "Application/Library name = $PROGRAM_NAME/$PROGRAM_NAME_UC/$PROGRAM_NAME_LC"
     echo "First src file = $PROJECT_DIR/src/${PROGRAM_NAME}.c"
     echo "Press Ctrl-C to cancel"
     read CTRL_C
@@ -79,18 +80,18 @@ run()
 
     if ! test -f $PROJECT_DIR/autogen.sh; then
         cat $MODULE_DIR/files/autogen.sh.in \
-            | sed "s/@PKG_NAME@/$PKG_NAME/g" \
-            | sed "s/@PROGRAM_NAME@/$PROGRAM_NAME/g" \
+            | sed "s/%PKG_NAME%/$PKG_NAME/g" \
+            | sed "s/%PROGRAM_NAME%/$PROGRAM_NAME/g" \
             >$PROJECT_DIR/autogen.sh
         chmod +x $PROJECT_DIR/autogen.sh
         echo "Wrote $PROJECT_DIR/autogen.sh"
     fi
     if ! test -f $PROJECT_DIR/configure.in; then
         cat $MODULE_DIR/files/$PKG_TYPE.configure.in.in \
-            | sed "s/@PKG_NAME@/$PKG_NAME/g" \
-            | sed "s/@PKG_NAME_UC@/$PKG_NAME_UC/g" \
-            | sed "s/@INITIAL_VERSION@/$INITIAL_VERSION/g" \
-            | sed "s/@PROGRAM_NAME@/$PROGRAM_NAME/g" \
+            | sed "s/%PKG_NAME%/$PKG_NAME/g" \
+            | sed "s/%PKG_NAME_UC%/$PKG_NAME_UC/g" \
+            | sed "s/%INITIAL_VERSION%/$INITIAL_VERSION/g" \
+            | sed "s/%PROGRAM_NAME%/$PROGRAM_NAME/g" \
             >$PROJECT_DIR/configure.in
         echo "Wrote $PROJECT_DIR/configure.in"
     fi
@@ -99,20 +100,31 @@ run()
         echo "Wrote $PROJECT_DIR/Makefile.am"
     fi
     if ! test -f $PROJECT_DIR/src/Makefile.am; then
-        cat $MODULE_DIR/files/src/Makefile.am.in \
-            | sed "s/@PROGRAM_NAME@/$PROGRAM_NAME/g" \
-            | sed "s/@PROGRAM_NAME_UC@/$PROGRAM_NAME_UC/g" \
+        cat $MODULE_DIR/files/src/$PKG_TYPE.Makefile.am.in \
+            | sed "s/%PROGRAM_NAME%/$PROGRAM_NAME/g" \
+            | sed "s/%PROGRAM_NAME_UC%/$PROGRAM_NAME_UC/g" \
             >$PROJECT_DIR/src/Makefile.am
         echo "Wrote $PROJECT_DIR/src/Makefile.am"
     fi
-    if ! test -f $PROJECT_DIR/src/data/${PROGRAM_NAME}.desktop.in; then
-        cat $MODULE_DIR/files/src/data/program.desktop.in.in \
-            | sed "s/@PROGRAM_NAME@/$PROGRAM_NAME/g" \
-            | sed "s/@PROGRAM_NAME_UC@/$PROGRAM_NAME_UC/g" \
-            | sed "s/@FULL_PROGRAM_NAME@/$FULL_PROGRAM_NAME/g" \
-            | sed "s/@GENERIC_PROGRAM_NAME@/$GENERIC_PROGRAM_NAME/g" \
-            >$PROJECT_DIR/src/data/${PROGRAM_NAME}.desktop.in
-        echo "Wrote $PROJECT_DIR/src/data/${PROGRAM_NAME}.desktop.in"
+    if test "$PKG_TYPE" = "application"; then
+        if ! test -f $PROJECT_DIR/src/data/${PROGRAM_NAME}.desktop.in; then
+            cat $MODULE_DIR/files/src/data/program.desktop.in.in \
+                | sed "s/%PROGRAM_NAME%/$PROGRAM_NAME/g" \
+                | sed "s/%PROGRAM_NAME_UC%/$PROGRAM_NAME_UC/g" \
+                | sed "s/%FULL_PROGRAM_NAME%/$FULL_PROGRAM_NAME/g" \
+                | sed "s/%GENERIC_PROGRAM_NAME%/$GENERIC_PROGRAM_NAME/g" \
+                >$PROJECT_DIR/src/data/${PROGRAM_NAME}.desktop.in
+            echo "Wrote $PROJECT_DIR/src/data/${PROGRAM_NAME}.desktop.in"
+        fi
+    else
+        if ! test -f $PROJECT_DIR/${PROGRAM_NAME}.pc.in; then
+            cat $MODULE_DIR/files/library.pc.in.in \
+                | sed "s/%PROGRAM_NAME%/$PROGRAM_NAME/g" \
+                | sed "s/%PROGRAM_NAME_UC%/$PROGRAM_NAME_UC/g" \
+                | sed "s/%FULL_PROGRAM_NAME%/$FULL_PROGRAM_NAME/g" \
+                >$PROJECT_DIR/${PROGRAM_NAME}.pc.in
+            echo "Wrote $PROJECT_DIR/${PROGRAM_NAME}.pc.in"
+        fi
     fi
     
     touch $PROJECT_DIR/src/${PROGRAM_NAME}.c

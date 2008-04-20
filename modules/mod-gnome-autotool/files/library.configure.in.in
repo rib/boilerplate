@@ -2,8 +2,8 @@ dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
 
-AC_INIT(@PKG_NAME@, [@INITIAL_VERSION@])
-AC_CONFIG_SRCDIR(src/@PROGRAM_NAME@.c)
+AC_INIT(%PKG_NAME%, [%INITIAL_VERSION%])
+AC_CONFIG_SRCDIR(src/%PROGRAM_NAME%.c)
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_HEADERS(config.h)
 AM_INIT_AUTOMAKE([gnu])
@@ -88,13 +88,13 @@ dnl ================================================================
 dnl I18n stuff.
 dnl ================================================================
 dnl AC_PROG_INTLTOOL([0.23])
-dnl GETTEXT_PACKAGE=@PKG_NAME@
+dnl GETTEXT_PACKAGE=%PKG_NAME%
 dnl AC_SUBST(GETTEXT_PACKAGE)
 dnl AC_SUBST([CONFIG_STATUS_DEPENDENCIES],['$(top_srcdir)/po/LINGUAS'])
 dnl AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [Gettext package])
 dnl ALL_LINGUAS="`cat "$srcdir/po/LINGUAS" | grep -v '^#'`"
-dnl @PKG_NAME@localedir='${prefix}/${DATADIRNAME}/locale'
-dnl AC_SUBST(@PKG_NAME@localedir)
+dnl %PKG_NAME%localedir='${prefix}/${DATADIRNAME}/locale'
+dnl AC_SUBST(%PKG_NAME%localedir)
 dnl AM_GLIB_GNU_GETTEXT
 
 
@@ -108,7 +108,7 @@ GNOME_DOC_INIT
 dnl ================================================================
 dnl Check for dependency packages.
 dnl ================================================================
-PKG_CHECK_MODULES(@PKG_NAME_UC@_DEP, [
+PKG_CHECK_MODULES(%PKG_NAME_UC%_DEP, [
 		  gtk+-2.0 >= 2.2 
 		  glib-2.0 >= 2.2 
 		  libglade-2.0 >= 2.0 
@@ -143,8 +143,8 @@ dnl What needs to be substituted in other files
 dnl ================================================================
 AC_SUBST(EXTRA_CFLAGS)
 AC_SUBST(EXTRA_CPPFLAGS)
-AC_SUBST(@PKG_NAME_UC@_DEP_CFLAGS)
-AC_SUBST(@PKG_NAME_UC@_DEP_LIBS)
+AC_SUBST(%PKG_NAME_UC%_DEP_CFLAGS)
+AC_SUBST(%PKG_NAME_UC%_DEP_LIBS)
 
 
 dnl ================================================================
@@ -154,6 +154,6 @@ AC_OUTPUT(
 Makefile 
 src/Makefile
 dnl po/Makefile.in
-dnl @PKG_NAME@-@INITIAL_VERSION@.pc
+dnl %PKG_NAME%-%INITIAL_VERSION%.pc
 )
 
