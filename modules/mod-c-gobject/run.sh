@@ -43,7 +43,7 @@ gen_new_class()
         echo "> $SRC_DIR/${CLASS_FILENAME_STEM}.h"
     fi
 
-    
+
     read_var "Enter a project wide, lowercase symbol prefix:" CLASS_SYMBOL_PREFIX_LC "my"
 
     DEFAULT_SYMBOL_PREFIX_UC=`echo -n $CLASS_SYMBOL_PREFIX_LC | tr 'a-z' 'A-Z'`
@@ -51,14 +51,19 @@ gen_new_class()
 
     read_var "Enter a project wide, CamelCase symbol prefix:" CLASS_SYMBOL_PREFIX_CC "$CLASS_SYMBOL_PREFIX_UC"
 
-    
+
     read_var "Enter a lowercase class name, excluding the project prefix:" CLASS_NAME_LC "object"
-    
+
     DEFAULT_NAME_UC=`echo $CLASS_NAME_LC | tr 'a-z' 'A-Z'`
     read_var "Enter an UPPERCASE class name, excluding the project prefix:" CLASS_NAME_UC "$DEFAULT_NAME_UC"
 
     read_var "Enter an CamelCase class name, excluding the project prefix:" CLASS_NAME_CC "$CLASS_NAME_UC"
 
+
+    read_var "Enter a parent class, UPPERCASE symbol prefix:" PARENT_CLASS_SYMBOL_PREFIX_UC "G"
+    read_var "Enter a parent class, CamelCase symbol prefix:" PARENT_CLASS_SYMBOL_PREFIX_CC "G"
+    read_var "Enter an UPPERCASE parent class name, excluding the project prefix:" PARENT_CLASS_NAME_UC "OBJECT"
+    read_var "Enter an CamelCase parent class name, excluding the project prefix:" PARENT_CLASS_NAME_CC "Object"
 
     echo
     echo
@@ -83,6 +88,8 @@ gen_new_class()
     sed -i "s/MY_TYPE_OBJECT/${CLASS_SYMBOL_PREFIX_UC}_TYPE_${CLASS_NAME_UC}/g" ${CLASS_FILENAME_STEM}.c
     sed -i "s/MY_IS_OBJECT/${CLASS_SYMBOL_PREFIX_UC}_IS_${CLASS_NAME_UC}/g" ${CLASS_FILENAME_STEM}.c
     sed -i "s/MyObject/${CLASS_SYMBOL_PREFIX_CC}${CLASS_NAME_CC}/g" ${CLASS_FILENAME_STEM}.c
+    sed -i "s/ParentObject/${PARENT_CLASS_SYMBOL_PREFIX_CC}${PARENT_CLASS_NAME_CC}/g" ${CLASS_FILENAME_STEM}.c
+    sed -i "s/PARENT_TYPE_OBJECT/${PARENT_CLASS_SYMBOL_PREFIX_UC}_TYPE_${PARENT_CLASS_NAME_UC}/g" ${CLASS_FILENAME_STEM}.c
 
     cp $MODULE_DIR/files/g-object-class.h $SRC_DIR/${CLASS_FILENAME_STEM}.h
     sed -i "s/my_object/${CLASS_SYMBOL_PREFIX_LC}_${CLASS_NAME_LC}/g" ${CLASS_FILENAME_STEM}.h
@@ -90,6 +97,7 @@ gen_new_class()
     sed -i "s/MyObject/${CLASS_SYMBOL_PREFIX_CC}${CLASS_NAME_CC}/g" ${CLASS_FILENAME_STEM}.h
     sed -i "s/MY_TYPE_OBJECT/${CLASS_SYMBOL_PREFIX_UC}_TYPE_${CLASS_NAME_UC}/g" ${CLASS_FILENAME_STEM}.h
     sed -i "s/MY_IS_OBJECT/${CLASS_SYMBOL_PREFIX_UC}_IS_${CLASS_NAME_UC}/g" ${CLASS_FILENAME_STEM}.h
+    sed -i "s/ParentObject/${PARENT_CLASS_SYMBOL_PREFIX_CC}${PARENT_CLASS_NAME_CC}/g" ${CLASS_FILENAME_STEM}.h
 
     echo "Done!"
 }
@@ -107,7 +115,7 @@ gen_new_interface()
         echo "> $SRC_DIR/${INTERFACE_FILENAME_STEM}.h"
     fi
 
-    
+
     read_var "Enter a project wide, lowercase symbol prefix:" INTERFACE_SYMBOL_PREFIX_LC "my"
 
     DEFAULT_SYMBOL_PREFIX_UC=`echo -n $INTERFACE_SYMBOL_PREFIX_LC | tr 'a-z' 'A-Z'`
@@ -115,9 +123,9 @@ gen_new_interface()
 
     read_var "Enter a project wide, CamelCase symbol prefix:" INTERFACE_SYMBOL_PREFIX_CC "$INTERFACE_SYMBOL_PREFIX_UC"
 
-    
+
     read_var "Enter a lowercase interface name, excluding the project prefix:" INTERFACE_NAME_LC "object"
-    
+
     DEFAULT_NAME_UC=`echo $INTERFACE_NAME_LC | tr 'a-z' 'A-Z'`
     read_var "Enter an UPPERCASE interface name, excluding the project prefix:" INTERFACE_NAME_UC "$DEFAULT_NAME_UC"
 
