@@ -1,0 +1,3 @@
+DEVENV_UPDATE_TAGS=1
+DEVENV_UPDATE_ALL_TAGS=1
+source ../bashrc
