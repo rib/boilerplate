@@ -8,8 +8,8 @@ PKG_NAME=%PKG_NAME%
 
 (test -f $srcdir/configure.in \
   && test -f $srcdir/autogen.sh \
-  && test -d $srcdir/src \
-  && test -f $srcdir/src/%PROGRAM_NAME%.c) || {
+  && test -d $srcdir/%PKG_NAME \
+  && test -f $srcdir/%PKG_NAME/%PKG_NAME%.c) || {
     echo -n "**Error**: Directory \"$srcdir\" does not look like the"
     echo " top-level $PKG_NAME directory"
     exit 1

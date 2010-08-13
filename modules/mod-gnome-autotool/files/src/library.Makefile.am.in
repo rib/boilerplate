@@ -1,43 +1,21 @@
 
-bin_PROGRAMS = %PROGRAM_NAME%
+lib_LTLIBRARIES = lib%PROGRAM_NAME_LC%.@%PKG_NAME_UC%_MAJOR_VERSION@.@%PKG_NAME_UC%_MINOR_VERSION@.la
 
-%PROGRAM_NAME_UC%_SOURCES = %PROGRAM_NAME%.c
+lib%PROGRAM_NAME_LC%_@%PKG_NAME_UC%_MAJOR_VERSION@_@%PKG_NAME_UC%_MINOR_VERSION@_la_SOURCES = %PROGRAM_NAME_LC%.c
 
-#%PROGRAM_NAME%_LDADD =
-%PROGRAM_NAME%_LDFLAGS = -export-dynamic
-%PROGRAM_NAME%_CFLAGS = @EXTRA_CFLAGS@
-%PROGRAM_NAME%_CPPFLAGS = \
-    -D%PROGRAM_NAME_UC%_GLADEDIR=\""$(datadir)/%PROGRAM_NAME%/glade/"\" \
+#lib%PROGRAM_NAME_LC%_@%PKG_NAME_UC%_MAJOR_VERSION@_@%PKG_NAME_UC%_MINOR_VERSION@_la_LDADD =
+lib%PROGRAM_NAME_LC%_@%PKG_NAME_UC%_MAJOR_VERSION@_@%PKG_NAME_UC%_MINOR_VERSION@_la_LDFLAGS = -export-dynamic
+lib%PROGRAM_NAME_LC%_@%PKG_NAME_UC%_MAJOR_VERSION@_@%PKG_NAME_UC%_MINOR_VERSION@_la_CFLAGS = @EXTRA_CFLAGS@
+lib%PROGRAM_NAME_LC%_@%PKG_NAME_UC%_MAJOR_VERSION@_@%PKG_NAME_UC%_MINOR_VERSION@_la_CPPFLAGS = \
     -DGNOME_ICONDIR=\""$(datadir)/pixmaps"\" \
     -DSHARE_DIR=\"$(pkgdatadir)\" \
-    -D%PROGRAM_NAME_UC%_LOCALEDIR=\""$(%PROGRAM_NAME%localedir)"\" \
+    -D%PROGRAM_NAME_UC%_LOCALEDIR=\""$(%PROGRAM_NAME_LC%localedir)"\" \
     -D%PROGRAM_NAME_UC%_BIN_DIR=\""$(bindir)"\" \
     -I$(top_srcdir) \
     -I$(top_srcdir)/src \
     @EXTRA_CPPFLAGS@
 
-gladedir = $(datadir)/%PROGRAM_NAME%/glade/
-glade_DATA = \
-    data/glade/%PROGRAM_NAME%.glade
-
-#uidir = $(datadir)/%PROGRAM_NAME%/ui/
-#ui_DATA = \
-#    data/ui/toolbar-menu-ui.xml
-
-gnomemenudir = $(datadir)/applications
-gnomemenu_in_files = data/%PROGRAM_NAME%.desktop.in
-gnomemenu_DATA = $(gnomemenu_premerge_files:.desktop.in=.desktop)
-
-EXTRA_DIST = \
-    $(glade_DATA) \
-    $(gnomemenu_DATA)
-#    $(ui_DATA)
+#EXTRA_DIST = 
 
 #@INTLTOOL_DESKTOP_RULE@
-
-CLEANFILES = \
-	$(gnomemenu_DATA)
-
-DISTCLEANFILES = \
-	$(DISTCLEANFILES)
 

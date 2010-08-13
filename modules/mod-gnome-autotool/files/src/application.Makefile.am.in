@@ -1,31 +1,31 @@
 
-bin_PROGRAMS = %PROGRAM_NAME%
+bin_PROGRAMS = %PROGRAM_NAME_LC%
 
-%PROGRAM_NAME_UC%_SOURCES = %PROGRAM_NAME%.c
+%PROGRAM_NAME_LC%_SOURCES = %PROGRAM_NAME_LC%.c
 
-#%PROGRAM_NAME%_LDADD =
-%PROGRAM_NAME%_LDFLAGS = -export-dynamic
-%PROGRAM_NAME%_CFLAGS = @EXTRA_CFLAGS@
-%PROGRAM_NAME%_CPPFLAGS = \
-    -D%PROGRAM_NAME_UC%_GLADEDIR=\""$(datadir)/%PROGRAM_NAME%/glade/"\" \
+#%PROGRAM_NAME_LC%_LDADD =
+%PROGRAM_NAME_LC%_LDFLAGS = @PROGRAM_NAME_UC@_DEP_LIBS -export-dynamic
+%PROGRAM_NAME_LC%_CFLAGS = @PROGRAM_NAME_UC@_DEP_CFLAGS @ @EXTRA_CFLAGS@
+%PROGRAM_NAME_LC%_CPPFLAGS = \
+    -D%PROGRAM_NAME_UC%_GLADEDIR=\""$(datadir)/%PROGRAM_NAME_LC%/glade/"\" \
     -DGNOME_ICONDIR=\""$(datadir)/pixmaps"\" \
     -DSHARE_DIR=\"$(pkgdatadir)\" \
-    -D%PROGRAM_NAME_UC%_LOCALEDIR=\""$(%PROGRAM_NAME%localedir)"\" \
+    -D%PROGRAM_NAME_UC%_LOCALEDIR=\""$(%PROGRAM_NAME_LC%localedir)"\" \
     -D%PROGRAM_NAME_UC%_BIN_DIR=\""$(bindir)"\" \
     -I$(top_srcdir) \
     -I$(top_srcdir)/src \
     @EXTRA_CPPFLAGS@
 
-gladedir = $(datadir)/%PROGRAM_NAME%/glade/
+gladedir = $(datadir)/%PROGRAM_NAME_LC%/glade/
 glade_DATA = \
-    data/glade/%PROGRAM_NAME%.glade
+    data/glade/%PROGRAM_NAME_LC%.glade
 
-#uidir = $(datadir)/%PROGRAM_NAME%/ui/
+#uidir = $(datadir)/%PROGRAM_NAME_LC%/ui/
 #ui_DATA = \
 #    data/ui/toolbar-menu-ui.xml
 
 gnomemenudir = $(datadir)/applications
-gnomemenu_in_files = data/%PROGRAM_NAME%.desktop.in
+gnomemenu_in_files = data/%PROGRAM_NAME_LC%.desktop.in
 gnomemenu_DATA = $(gnomemenu_premerge_files:.desktop.in=.desktop)
 
 EXTRA_DIST = \

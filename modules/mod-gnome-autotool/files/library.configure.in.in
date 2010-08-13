@@ -2,14 +2,81 @@ dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
 
-AC_INIT(%PKG_NAME%, [%INITIAL_VERSION%])
-AC_CONFIG_SRCDIR(src/%PROGRAM_NAME%.c)
+dnl ================================================================
+dnl Package version (i.e. the pretty number that users see)
+dnl ================================================================
+m4_define([%PKG_NAME_LC_NORMALIZED%_major_version], [%MAJOR_VERSION%])
+m4_define([%PKG_NAME_LC_NORMALIZED%_minor_version], [%MINOR_VERSION%])
+m4_define([%PKG_NAME_LC_NORMALIZED%_micro_version], [%MICRO_VERSION%])
+m4_define([%PKG_NAME_LC_NORMALIZED%_version],
+          [%PKG_NAME_LC_NORMALIZED%_major_version.%PKG_NAME_LC_NORMALIZED%_minor_version.%PKG_NAME_LC_NORMALIZED%_micro_version])
+
+dnl ================================================================
+dnl Interface version details for libtool
+dnl ================================================================
+# NB: I didn't copy the widely used glib/gtk style of dealing with libtool
+# versioning since I found the different (compared to libtool's documentation)
+# ideas for what the interface age should represent; and the addition of a
+# binary age confusing. I couldn't find any documentation/mailing list archives
+# etc explaing the ideas nor any code that makes use of those values. They also
+# seem to go against the advice of not basing the libtool versioning on package
+# versioning.
+#
+# For reference on how the various numbers should be updated at release time
+# these rules are adapted from the libtool info pages:
+#
+#  1. Update the version information only immediately before a public
+#     release of your software.
+#
+#  2. If the library source code has changed at all since the last
+#     update, then increment REVISION (`C:R:A' becomes `C:r+1:A').
+#
+#  3. If any interfaces have been added, removed, or changed since the
+#     last update, increment CURRENT, and set REVISION to 0.
+#
+#  4. If any interfaces have been added since the last public release,
+#     then increment AGE.
+#
+#  5. If any interfaces have been removed since the last public release,
+#     then set AGE to 0.
+m4_define([%PKG_NAME_LC_NORMALIZED%_lt_current], 0)
+m4_define([%PKG_NAME_LC_NORMALIZED%_lt_revision], 0)
+m4_define([%PKG_NAME_LC_NORMALIZED%_lt_age], 0)
+# We do also tell libtool the pretty version also:
+m4_define([%PKG_NAME_LC_NORMALIZED%_lt_release], [%PKG_NAME_LC_NORMALIZED%_version])
+
+AC_INIT(%PKG_NAME%,  [%PKG_NAME%_version])
+AC_CONFIG_SRCDIR(%PKG_NAME%/%PKG_NAME%%.c)
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_HEADERS(config.h)
 AM_INIT_AUTOMAKE([gnu])
 
 
-AM_MAINTAINER_MODE
+dnl ================================================================
+dnl More version number stuff
+dnl ================================================================
+%PKG_NAME_UC%_MAJOR_VERSION=%PKG_NAME_LC_NORMALIZED%_major_version
+%PKG_NAME_UC%_MINOR_VERSION=%PKG_NAME_LC_NORMALIZED%_minor_version
+%PKG_NAME_UC%_MICRO_VERSION=%PKG_NAME_LC_NORMALIZED%_micro_version
+%PKG_NAME_UC%_VERSION=%PKG_NAME_LC_NORMALIZED%_version
+
+AC_SUBST(%PKG_NAME_UC%_MAJOR_VERSION)
+AC_SUBST(%PKG_NAME_UC%_MINOR_VERSION)
+AC_SUBST(%PKG_NAME_UC%_MICRO_VERSION)
+AC_SUBST(%PKG_NAME_UC%_VERSION)
+
+
+dnl ================================================================
+dnl libtool versioning
+dnl ================================================================
+%PKG_NAME_UC_NORMALIZED%_LT_CURRENT=%PKG_NAME_LC_NORMALIZED%_lt_current
+%PKG_NAME_UC_NORMALIZED%_LT_REVISION=%PKG_NAME_LC_NORMALIZED%_lt_revision
+%PKG_NAME_UC_NORMALIZED%_LT_AGE=%PKG_NAME_LC_NORMALIZED%_lt_age
+%PKG_NAME_UC_NORMALIZED%_LT_RELEASE=%PKG_NAME_LC_NORMALIZED%_lt_release
+AC_SUBST(%PKG_NAME_UC_NORMALIZED%_LT_CURRENT)
+AC_SUBST(%PKG_NAME_UC_NORMALIZED%_LT_REVISION)
+AC_SUBST(%PKG_NAME_UC_NORMALIZED%_LT_AGE)
+AC_SUBST(%PKG_NAME_UC_NORMALIZED%_LT_RELEASE)
 
 
 dnl ================================================================
@@ -65,14 +132,14 @@ AC_ARG_ENABLE(uninstalled-build,
 	      enable_uninstalled=yes,)
 if test x"$enable_uninstalled" = xyes; then
 	AC_DEFINE_UNQUOTED(
-        SHARE_UNINSTALLED_DIR,"`pwd`/src/data",[path to source data dir])
+        SHARE_UNINSTALLED_DIR,"`pwd`/%PKG_NAME%/data",[path to source data dir])
 fi
 
 
 dnl ================================================================
 dnl Compiler stuff.
 dnl ================================================================
-AC_PROG_CC
+AM_PROG_CC_C_O
 AC_ISC_POSIX
 AC_C_CONST
 
@@ -108,12 +175,9 @@ GNOME_DOC_INIT
 dnl ================================================================
 dnl Check for dependency packages.
 dnl ================================================================
-PKG_CHECK_MODULES(%PKG_NAME_UC%_DEP, [
-		  gtk+-2.0 >= 2.2 
-		  glib-2.0 >= 2.2 
-		  libglade-2.0 >= 2.0 
-		  gthread-2.0
-])
+%PKG_NAME_UC_NORMALIZED%_PKG_REQUIRES="glib-2.0"
+AC_SUBST(%PKG_NAME_UC_NORMALIZED%_PKG_REQUIRES)
+PKG_CHECK_MODULES(%PKG_NAME_UC_NORMALIZED%_DEP, [$%PKG_NAME_UC_NORMALIZED%_PKG_REQUIRES])
 
 
 dnl ================================================================
@@ -143,8 +207,8 @@ dnl What needs to be substituted in other files
 dnl ================================================================
 AC_SUBST(EXTRA_CFLAGS)
 AC_SUBST(EXTRA_CPPFLAGS)
-AC_SUBST(%PKG_NAME_UC%_DEP_CFLAGS)
-AC_SUBST(%PKG_NAME_UC%_DEP_LIBS)
+AC_SUBST(%PKG_NAME_UC_NORMALIZED%_DEP_CFLAGS)
+AC_SUBST(%PKG_NAME_UC_NORMALIZED%_DEP_LIBS)
 
 
 dnl ================================================================
@@ -152,8 +216,8 @@ dnl Dah Da!
 dnl ================================================================
 AC_OUTPUT(
 Makefile 
-src/Makefile
+%PKG_NAME%/Makefile
 dnl po/Makefile.in
-dnl %PKG_NAME%-%INITIAL_VERSION%.pc
+dnl %PKG_NAME%-%MAJOR_VERSION%.%MINOR_VERSION%.pc
 )
 
