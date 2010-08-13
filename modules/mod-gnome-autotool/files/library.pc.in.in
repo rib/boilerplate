@@ -1,0 +1,16 @@
+prefix=@prefix@
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+majorversion=@%PROGRAM_NAME_UC%_MAJOR_VERSION@
+minorversion=@%PROGRAM_NAME_UC%_MINOR_VERSION@
+microversion=@%PROGRAM_NAME_UC%_MICRO_VERSION@
+apiversion=@%PROGRAM_NAME_UC%_MAJOR_VERSION@.@%PROGRAM_NAME_UC%_MINOR_VERSION@
+
+Name: %PROGRAM_NAME%
+Description: %FULL_PROGRAM_NAME%
+Version: @VERSION@
+Libs: -L${libdir} -l%PKG_NAME_LC%-${apiversion}
+Cflags: -I${includedir}/%PKG_NAME_LC%-${apiversion}
+Requires: @%PKG_NAME_UC%_PKG_REQUIRES@
+
