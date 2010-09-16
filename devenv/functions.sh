@@ -167,20 +167,22 @@ _devenv_tag_update_hook()
 	echo "@$1@" > $DEVENV_TOP_SRC_DIR/tag_files/updated-projects
     fi
 
-    pushd $1 >/dev/null
-    mkdir -p tag_files
-    if test -z "$DEVENV_SOURCED_AS_DEPENDENCY"; then
-        _devenv_update_tags $1
-    elif test -n "$DEVENV_SOURCED_AS_DEPENDENCY" \
-            -a -n "$DEVENV_UPDATE_ALL_TAGS"; then
-        _devenv_update_tags $1
-    fi
-    popd >/dev/null
+    if test -d $1; then
+	pushd $1 >/dev/null
+	mkdir -p tag_files
+	if test -z "$DEVENV_SOURCED_AS_DEPENDENCY"; then
+	    _devenv_update_tags $1
+	elif test -n "$DEVENV_SOURCED_AS_DEPENDENCY" \
+		-a -n "$DEVENV_UPDATE_ALL_TAGS"; then
+	    _devenv_update_tags $1
+	fi
+	popd >/dev/null
     
-    echo -n "$1/tags," >> \
-        $DEVENV_TOP_SRC_DIR/tag_files/tags-list
-    echo "cscope add $1/cscope.out" >> \
-        $DEVENV_TOP_SRC_DIR/tag_files/cscope-list
+	echo -n "$1/tags," >> \
+	    $DEVENV_TOP_SRC_DIR/tag_files/tags-list
+	echo "cscope add $1/cscope.out" >> \
+	    $DEVENV_TOP_SRC_DIR/tag_files/cscope-list
+    fi
 }
 
 devenv_finish()
