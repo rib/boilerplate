@@ -27,6 +27,24 @@ flags()
     return 0
 }
 
+generate()
+{
+    cat $2 \
+	| sed "s/%PKG_NAME%/$PKG_NAME/g" \
+	| sed "s/%PKG_NAME_UC%/$PKG_NAME_UC/g" \
+	| sed "s/%PKG_NAME_LC_NORMALIZED%/$PKG_NAME_LC_NORMALIZED/g" \
+	| sed "s/%PKG_NAME_UC_NORMALIZED%/$PKG_NAME_UC_NORMALIZED/g" \
+	| sed "s/%PROGRAM_NAME_LC%/$PROGRAM_NAME_LC/g" \
+	| sed "s/%PROGRAM_NAME_UC%/$PROGRAM_NAME_UC/g" \
+	| sed "s/%INITIAL_VERSION%/$INITIAL_VERSION/g" \
+	| sed "s/%MAJOR_VERSION%/$MAJOR_VERSION/g" \
+	| sed "s/%MINOR_VERSION%/$MINOR_VERSION/g" \
+	| sed "s/%MICRO_VERSION%/$MICRO_VERSION/g" \
+	| sed "s/%PROGRAM_NAME%/$PROGRAM_NAME/g" \
+	| sed "s/%FULL_PROGRAM_NAME%/$FULL_PROGRAM_NAME/g" \
+	>$1
+}
+
 run()
 {
     if test $# -ne 1; then
@@ -68,17 +86,17 @@ run()
     echo "Package name = $PKG_NAME/$PKG_NAME_UC"
     echo "Initial version = $INITIAL_VERSION"
     echo "Application/Library name = $PROGRAM_NAME/$PROGRAM_NAME_UC/$PROGRAM_NAME_LC"
-    echo "First src file = $PROJECT_DIR/src/${PROGRAM_NAME_LC}.c"
+    echo "First src file = $PROJECT_DIR/$PKG_NAME/${PROGRAM_NAME_LC}.c"
     echo "Press Ctrl-C to cancel"
     read CTRL_C
 
 
     mkdir $PROJECT_DIR/m4 2>/dev/null
-    mkdir $PROJECT_DIR/src 2>/dev/null
+    mkdir $PROJECT_DIR/$PKG_NAME 2>/dev/null
     if test "$PKG_TYPE" = "application"; then
-        mkdir $PROJECT_DIR/src/data 2>/dev/null
-        mkdir $PROJECT_DIR/src/data/glade 2>/dev/null
-        mkdir $PROJECT_DIR/src/data/ui 2>/dev/null
+        mkdir $PROJECT_DIR/$PKG_NAME/data 2>/dev/null
+        mkdir $PROJECT_DIR/$PKG_NAME/data/glade 2>/dev/null
+        mkdir $PROJECT_DIR/$PKG_NAME/data/ui 2>/dev/null
     fi
 
     
@@ -88,105 +106,49 @@ run()
     touch $PROJECT_DIR/ChangeLog   
 
     if ! test -f $PROJECT_DIR/autogen.sh; then
-        cat $MODULE_DIR/files/autogen.sh.in \
-            | sed "s/%PKG_NAME%/$PKG_NAME/g" \
-            | sed "s/%PKG_NAME_UC%/$PKG_NAME_UC/g" \
-            | sed "s/%PKG_NAME_LC_NORMALIZED%/$PKG_NAME_LC_NORMALIZED/g" \
-            | sed "s/%PKG_NAME_UC_NORMALIZED%/$PKG_NAME_UC_NORMALIZED/g" \
-            | sed "s/%PROGRAM_NAME_LC%/$PROGRAM_NAME_LC/g" \
-            | sed "s/%PROGRAM_NAME_UC%/$PROGRAM_NAME_UC/g" \
-            | sed "s/%INITIAL_VERSION%/$INITIAL_VERSION/g" \
-            | sed "s/%MAJOR_VERSION%/$MAJOR_VERSION/g" \
-            | sed "s/%MINOR_VERSION%/$MINOR_VERSION/g" \
-            | sed "s/%MICRO_VERSION%/$MICRO_VERSION/g" \
-            | sed "s/%PROGRAM_NAME%/$PROGRAM_NAME/g" \
-            | sed "s/%FULL_PROGRAM_NAME%/$FULL_PROGRAM_NAME/g" \
-            >$PROJECT_DIR/autogen.sh
+	generate $PROJECT_DIR/autogen.sh $MODULE_DIR/files/autogen.sh.in
         chmod +x $PROJECT_DIR/autogen.sh
         echo "Wrote $PROJECT_DIR/autogen.sh"
     fi
     if ! test -f $PROJECT_DIR/configure.in; then
-        cat $MODULE_DIR/files/$PKG_TYPE.configure.in.in \
-            | sed "s/%PKG_NAME%/$PKG_NAME/g" \
-            | sed "s/%PKG_NAME_UC%/$PKG_NAME_UC/g" \
-            | sed "s/%PKG_NAME_LC_NORMALIZED%/$PKG_NAME_LC_NORMALIZED/g" \
-            | sed "s/%PKG_NAME_UC_NORMALIZED%/$PKG_NAME_UC_NORMALIZED/g" \
-            | sed "s/%PROGRAM_NAME_LC%/$PROGRAM_NAME_LC/g" \
-            | sed "s/%PROGRAM_NAME_UC%/$PROGRAM_NAME_UC/g" \
-            | sed "s/%INITIAL_VERSION%/$INITIAL_VERSION/g" \
-            | sed "s/%MAJOR_VERSION%/$MAJOR_VERSION/g" \
-            | sed "s/%MINOR_VERSION%/$MINOR_VERSION/g" \
-            | sed "s/%MICRO_VERSION%/$MICRO_VERSION/g" \
-            | sed "s/%PROGRAM_NAME%/$PROGRAM_NAME/g" \
-            | sed "s/%FULL_PROGRAM_NAME%/$FULL_PROGRAM_NAME/g" \
-            >$PROJECT_DIR/configure.in
+	generate $PROJECT_DIR/configure.in $MODULE_DIR/files/$PKG_TYPE.configure.in.in
         echo "Wrote $PROJECT_DIR/configure.in"
     fi
     if ! test -f $PROJECT_DIR/Makefile.am; then
-        cp $MODULE_DIR/files/$PKG_TYPE.Makefile.am $PROJECT_DIR/Makefile.am
+        generate $PROJECT_DIR/Makefile.am $MODULE_DIR/files/$PKG_TYPE.Makefile.am
         echo "Wrote $PROJECT_DIR/Makefile.am"
     fi
-    if ! test -f $PROJECT_DIR/src/Makefile.am; then
-        cat $MODULE_DIR/files/src/$PKG_TYPE.Makefile.am.in \
-            | sed "s/%PKG_NAME%/$PKG_NAME/g" \
-            | sed "s/%PKG_NAME_UC%/$PKG_NAME_UC/g" \
-            | sed "s/%PKG_NAME_LC_NORMALIZED%/$PKG_NAME_LC_NORMALIZED/g" \
-            | sed "s/%PKG_NAME_UC_NORMALIZED%/$PKG_NAME_UC_NORMALIZED/g" \
-            | sed "s/%PROGRAM_NAME_LC%/$PROGRAM_NAME_LC/g" \
-            | sed "s/%PROGRAM_NAME_UC%/$PROGRAM_NAME_UC/g" \
-            | sed "s/%INITIAL_VERSION%/$INITIAL_VERSION/g" \
-            | sed "s/%MAJOR_VERSION%/$MAJOR_VERSION/g" \
-            | sed "s/%MINOR_VERSION%/$MINOR_VERSION/g" \
-            | sed "s/%MICRO_VERSION%/$MICRO_VERSION/g" \
-            | sed "s/%PROGRAM_NAME%/$PROGRAM_NAME/g" \
-            | sed "s/%FULL_PROGRAM_NAME%/$FULL_PROGRAM_NAME/g" \
-            >$PROJECT_DIR/src/Makefile.am
-        echo "Wrote $PROJECT_DIR/src/Makefile.am"
+    if ! test -d $PROJECT_DIR/po; then
+	mkdir $PROJECT_DIR/po
+	cp $MODULE_DIR/files/po/* $PROJECT_DIR/po
+    fi
+    if ! test -d $PROJECT_DIR/build/autotools; then
+	mkdir -p $PROJECT_DIR/build/autotools
+	cp $MODULE_DIR/files/build/autotools/* $PROJECT_DIR/build/autotools
+    fi
+    if ! test -f $PROJECT_DIR/$PKG_NAME/Makefile.am; then
+	generate $PROJECT_DIR/$PKG_NAME/Makefile.am $MODULE_DIR/files/src/$PKG_TYPE.Makefile.am.in
+        echo "Wrote $PROJECT_DIR/$PKG_NAME/Makefile.am"
     fi
     if test "$PKG_TYPE" = "application"; then
-        if ! test -f $PROJECT_DIR/src/data/${PROGRAM_NAME}.desktop.in; then
-            cat $MODULE_DIR/files/src/data/program.desktop.in.in \
-		| sed "s/%PKG_NAME%/$PKG_NAME/g" \
-		| sed "s/%PKG_NAME_UC%/$PKG_NAME_UC/g" \
-		| sed "s/%PKG_NAME_LC_NORMALIZED%/$PKG_NAME_LC_NORMALIZED/g" \
-		| sed "s/%PKG_NAME_UC_NORMALIZED%/$PKG_NAME_UC_NORMALIZED/g" \
-		| sed "s/%PROGRAM_NAME_LC%/$PROGRAM_NAME_LC/g" \
-		| sed "s/%PROGRAM_NAME_UC%/$PROGRAM_NAME_UC/g" \
-		| sed "s/%INITIAL_VERSION%/$INITIAL_VERSION/g" \
-		| sed "s/%MAJOR_VERSION%/$MAJOR_VERSION/g" \
-		| sed "s/%MINOR_VERSION%/$MINOR_VERSION/g" \
-		| sed "s/%MICRO_VERSION%/$MICRO_VERSION/g" \
-		| sed "s/%PROGRAM_NAME%/$PROGRAM_NAME/g" \
-                | sed "s/%FULL_PROGRAM_NAME%/$FULL_PROGRAM_NAME/g" \
-                | sed "s/%GENERIC_PROGRAM_NAME%/$GENERIC_PROGRAM_NAME/g" \
-                >$PROJECT_DIR/src/data/${PROGRAM_NAME}.desktop.in
-            echo "Wrote $PROJECT_DIR/src/data/${PROGRAM_NAME}.desktop.in"
+        if ! test -f $PROJECT_DIR/$PKG_NAME/data/${PROGRAM_NAME}.desktop.in; then
+	    generate $PROJECT_DIR/$PKG_NAME/data/${PROGRAM_NAME}.desktop.in \
+		     $MODULE_DIR/files/src/data/program.desktop.in.in
+            echo "Wrote $PROJECT_DIR/$PKG_NAME/data/${PROGRAM_NAME}.desktop.in"
         fi
     else
         if ! test -f $PROJECT_DIR/${PROGRAM_NAME_LC}-${MAJOR_VERSION}.${MINOR_VERSION}.pc.in; then
-            cat $MODULE_DIR/files/library.pc.in.in \
-		| sed "s/%PKG_NAME%/$PKG_NAME/g" \
-		| sed "s/%PKG_NAME_UC%/$PKG_NAME_UC/g" \
-		| sed "s/%PKG_NAME_LC_NORMALIZED%/$PKG_NAME_LC_NORMALIZED/g" \
-		| sed "s/%PKG_NAME_UC_NORMALIZED%/$PKG_NAME_UC_NORMALIZED/g" \
-		| sed "s/%PROGRAM_NAME_LC%/$PROGRAM_NAME_LC/g" \
-		| sed "s/%PROGRAM_NAME_UC%/$PROGRAM_NAME_UC/g" \
-		| sed "s/%INITIAL_VERSION%/$INITIAL_VERSION/g" \
-		| sed "s/%MAJOR_VERSION%/$MAJOR_VERSION/g" \
-		| sed "s/%MINOR_VERSION%/$MINOR_VERSION/g" \
-		| sed "s/%MICRO_VERSION%/$MICRO_VERSION/g" \
-		| sed "s/%PROGRAM_NAME%/$PROGRAM_NAME/g" \
-                | sed "s/%FULL_PROGRAM_NAME%/$FULL_PROGRAM_NAME/g" \
-                | sed "s/%GENERIC_PROGRAM_NAME%/$GENERIC_PROGRAM_NAME/g" \
-                >$PROJECT_DIR/${PROGRAM_NAME_LC}-${MAJOR_VERSION}.${MINOR_VERSION}.pc.in
+	    generate $PROJECT_DIR/$PKG_NAME/${PROGRAM_NAME_LC}-${MAJOR_VERSION}.0.pc.in \
+		     $MODULE_DIR/files/library.pc.in.in
             echo "Wrote $PROJECT_DIR/${PROGRAM_NAME_LC}-${MAJOR_VERSION}.${MINOR_VERSION}.pc.in"
         fi
     fi
+    generate $PROJECT_DIR/${PKG_NAME}.doap $MODULE_DIR/files/template.doap
     
-    touch $PROJECT_DIR/src/${PROGRAM_NAME_LC}.c
-    if test "$PKG_TYPE" = "application"; then
-        touch $PROJECT_DIR/src/data/glade/${PROGRAM_NAME}.glade
-    fi
+#    touch $PROJECT_DIR/$PKG_NAME/${PROGRAM_NAME_LC}.c
+#    if test "$PKG_TYPE" = "application"; then
+#        touch $PROJECT_DIR/$PKG_NAME/data/glade/${PROGRAM_NAME}.glade
+#    fi
 }
 
 

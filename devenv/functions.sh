@@ -133,7 +133,11 @@ _devenv_update_tags()
 	echo "Running Cscope..."
 	cscope -buq -itag_files/files
 	echo "Running Exuberant Ctags..."
-	exuberant-ctags -Ltag_files/files
+	if which exuberant-ctags &>/dev/null; then
+	    exuberant-ctags -Ltag_files/files
+	else
+	    ctags -R -Ltag_files/files
+	fi
     else
 	echo "No files to index"
     fi
